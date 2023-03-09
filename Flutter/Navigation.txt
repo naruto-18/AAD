@@ -1,0 +1,77 @@
+main.dart
+
+
+import 'package:flutter/material.dart';
+import 'package:navigation/secondScreen.dart';
+void main() {
+  runApp(const MyApp());
+}
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+// This widget is the root of your application. @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: FirstScreen(),
+    );
+  }
+}
+class FirstScreen extends StatelessWidget {
+  const FirstScreen({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.orange[200],
+      appBar: AppBar(
+        title: Text("First Screen"),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SecondScreen(),
+                ),
+              );
+            },
+            child: Text("First Screen")),
+      ),
+    );
+  }
+}
+
+
+
+
+---------------------------------------------------------------------------------------
+
+
+secondScreen.dart
+
+import 'package:flutter/material.dart';
+class SecondScreen extends StatelessWidget {
+  const SecondScreen({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.green[200],
+      appBar: AppBar(
+        title: Text("Second Screen"),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("Second Screen")),
+      ),
+    );
+  }
+} 
