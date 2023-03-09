@@ -1,0 +1,67 @@
+>assets
+	>CSS,JS,img
+
+>server
+	>controller
+	>database
+	>model
+	>routes
+	>service
+
+>views
+
+index.js
+
+	
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User management system</title>
+</head>
+<body>
+    <header id="header">
+        <nav>
+            <div class="container">
+            <div class="text center">
+                <a href="https://www.britannica.com/plant/tree" class="nav-brand text-dark">User management system</a>
+            </div>
+            </div>
+        </nav>
+    </header>
+
+</body>
+</html>
+	
+
+-----------------------------------------------------------------------
+
+config.env
+
+PORT=3000
+
+-------------------------------------------------------------------
+
+server.js
+
+const express = require('express')
+const dotenv = require('dotenv')
+const morgan = require('morgan')
+const bodyparser = require('body-parser')
+const path = require('path')
+const app=express()
+dotenv.config({path:'config.env'})
+const PORT = process.env.PORT||8080
+app.use(morgan('tiny'))
+app.use(bodyparser.urlencoded({extended:true}))
+app.set('view engine','ejs')
+app.use('/CSS',express.static(path.resolve(__dirname,'assets/CSS')))
+app.use('/JS',express.static(path.resolve(__dirname,'assets/JS')))
+app.use('/img',express.static(path.resolve(__dirname,'assets/img')))
+
+app.get('/',(req,res)=>{
+    res.render('index.ejs');
+})
+app.listen(PORT)

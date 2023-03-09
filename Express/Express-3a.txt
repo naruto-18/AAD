@@ -1,0 +1,58 @@
+index.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Express</title>
+</head>
+<body>
+
+    <form action="/form" method="post">
+        <input type="text" name="firstname"><br>
+        <input type="text" name="secondname"><br>
+        <input type="submit">
+    </form>
+
+    
+</body>
+</html>
+
+---------------------------------------------------------------------------------
+
+
+index.js
+
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = express();
+
+app.use(bodyParser.urlencoded({extended:true}))
+
+app.get("/", (req,res) => {
+    res.send("<h1>Your server is online</h1>")
+})
+
+app.get("/form", (req,res) => {
+    res.sendFile(__dirname + "/index.html");
+})
+
+app.post("/form", (req,res) => {
+    var fname = req.body.firstname;
+    var lname = req.body.secondname
+
+    var obj = {
+        firstName: fname,
+        lastName: lname
+    };
+
+
+    console.log(fname + " " + lname)
+    console.log(obj);
+    console.log(JSON.stringify(obj));
+    res.redirect('/');
+})
+
+app.listen(3000,() => console.log("your server is online")) 

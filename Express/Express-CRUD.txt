@@ -1,0 +1,194 @@
+>controller
+
+EmployeeController.js
+
+const { response } = require('express')
+const Employee= require('../model/Employee')
+
+//Show the list of Employee
+
+const index = (req,res,next) => {
+    Employee.find()
+    .then(response => {
+        res.json({
+            response
+        })
+    })
+    .catch(error => {
+        res.json({
+            message:"An error occured!"
+        })
+    })
+}
+
+//show the single employee
+const show = (req,res,next) =>{
+    let employeeID = req.body.employeeID
+    Employee.findById(employeeID)
+    .then(response =>{
+        res.json({
+            response
+        })
+    })
+    .catch(error =>{
+        res.json({
+            message:"An error occured"
+        })
+    })
+}
+
+
+//store new employee
+const store = (req,res,next) => {
+    let employee = new Employee({
+        name: req.body.name,
+        designation: req.body.designation,
+        email: req.body.email,
+        age: req.body.age
+    })
+    employee.save()
+    .then(response =>{
+        res.json({
+            message:'Employee added successfully'
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: "An error occured"
+        })
+    })
+} 
+
+//update an employee
+
+const update = (req,res,next) =>{
+    let employeeID = req.body.employeeID
+    let updateData = {
+        name: req.body.name,
+        designation: req.body.designation,
+        email: req.body.email,
+        age: req.body.age
+    }
+
+    Employee.findByIdAndUpdate(employeeID,{$set: updateData})
+    .then(()=>{
+        res.json({
+            message: 'Employee updated'
+        })
+    })
+    .catch(() =>{
+        res.json({
+            message: 'An error occured'
+        })
+    })
+
+}
+
+//delete an employee
+
+const destroy = (req,res,next) => {
+    let employeeID = req.body.employeeID
+    Employee.findByIdAndRemove(employeeID)
+    .then(() =>{
+        res.json({
+            message: 'Employee delete successfully'
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: 'An error occured'
+        })
+    })
+}
+
+module.exports = {
+    index, show, store, update, destroy
+}
+
+
+-----------------------------------------------------------------------------
+
+
+>model
+
+Employee.js
+
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema
+
+const employeeSchema = new Schema({
+    name: {
+        type: String
+    },
+    designation: {
+        type: String
+    },
+    emial: {
+        type: String
+    },
+    age:{
+        type: Number
+    }
+}, {timestamps:true})
+
+const Employeee = mongoose.model('Employee',employeeSchema)
+module.exports = Employeee
+
+---------------------------------------------------------------------------
+
+>routes
+
+employee.js
+
+const express = require('express')
+const router = express.Router()
+
+const EmployeeController = require('../constroller/EmployeeController')
+
+router.get('/',EmployeeController.index)
+router.post('/show',EmployeeController.show)
+router.post('/store',EmployeeController.store)
+router.post('/update',EmployeeController.update)
+router.post('/destroy',EmployeeController.destroy)
+
+module.exports = router
+
+
+------------------------------------------------------------------------
+
+server.js
+
+const express = require('express')
+const mongoose = require('mongoose')
+const morgan = require('morgan')
+const bodyParser = require('body-parser')
+
+const EmployeeRoute = require('./routes/employee')
+mongoose.connect('mongodb://127.0.0.1:27017/testdb',{useNewUrlParser:true,useUnifiedTopology:true})
+const db = mongoose.connection
+
+db.on('error',(err) => {
+    console.log(err)
+})
+
+db.once('open', ()=>{
+    console.log(' Database Connection established')
+})
+
+const app = express()
+app.use(morgan('dev'))
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
+
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+    console.log(`Server is running on ${PORT}`)
+})
+
+
+app.use('/api/employee',EmployeeRoute)
+
+-----------------------------------------------------------------------
+
+"start": "nodemon server.js"

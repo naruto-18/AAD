@@ -1,0 +1,109 @@
+>controller
+homeController.js
+
+const homeController = (req,res) =>{
+    res.render('home');
+}
+
+export{homeController};
+
+
+
+homeController.js
+
+const homeController = (req,res) =>{
+    res.render('home');
+}
+
+export{homeController};
+
+-------------------------------------
+
+> middleware
+logger.js
+
+var myLogger = (req,res,next)=> {
+    console.log("Logged");
+    next();
+}
+
+export default myLogger;
+
+--------------------------------------------
+
+>routes
+
+web.js
+
+import express from 'express'
+const router = express.Router()
+import {homeController} from '../controller/homeController.js'
+import {aboutController} from '../controller/aboutController.js'
+
+router.get('/',homeController)
+router.get('/about',aboutController)
+
+export default router
+
+------------------------------------------
+>views
+
+
+home.ejs
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Home page</h1>
+</body>
+</html>
+
+
+
+about.ejs
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+</head>
+<body>
+    <h1>About page</h1>
+</body>
+</html>
+
+------------------------------------------
+
+app.js
+
+import express from 'express'
+import myLogger from './middleware/logger.js'
+import web from './routes/web.js'
+
+const app = express();
+
+app.set("view engine", "ejs")
+
+
+app.use(myLogger);
+app.use('/',web)
+
+app.listen(3000,()=> console.log("Your server is online"))
+
+----------------------------------
+
+package.json
+
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
