@@ -1,24 +1,41 @@
-FormAgeValidation.html
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modification</title>
+    <title>Form2</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 </head>
-<body>
-
-    <form name="myForm" ng-app>
-
-        <input type="text" name="firstName" ng-model="studentFistName" required>
-        <span ng-show="myForm.firstName.$touched && myForm.firstName.$error.required || myForm.firstName.$pristine && myForm.firstName.$error.required">Enter the First Name</span>
-        <br><br>
-        <input type="text" name="lastName" ng-model="studentLastName" required>
-        <span ng-show="myForm.lastName.$touched && myForm.lastName.$error.required || myForm.lastName.$pristine && myForm.lastName.$error.required">Enter the First Name</span>
-    </form>
+<body  ng-app="myApp">
     
+    <div>
+        <form name="myForm">
+            <input type="text" name="myInput" ng-model="myInput" required my-directive>
+            <h1>{{ myForm.myInput.$valid }}</h1>
+        </form>
+    </div>
+    
+
+    <script>
+        var app = angular.module('myApp', [])
+        app.directive('myDirective', function(){
+            return {
+                require: "ngModel",
+                link: function(scope,element,attr,myCtrl){
+                    function myValidation(value){
+                        if (value > 17){
+                            myCtrl.$setValidity('charE',true)
+                        }
+                        else{
+                            myCtrl.$setValidity('charE',false)
+                        }
+                        return value
+                    }
+                    myCtrl.$parsers.push(myValidation)
+                }
+            };
+        })
+    </script>
 </body>
 </html>
