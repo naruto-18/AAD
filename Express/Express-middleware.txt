@@ -9,13 +9,13 @@ export{homeController};
 
 
 
-homeController.js
+aboutController.js
 
-const homeController = (req,res) =>{
-    res.render('home');
+const aboutController = (req,res) =>{
+    res.render('about');
 }
 
-export{homeController};
+export{aboutController};
 
 -------------------------------------
 
